@@ -97,7 +97,67 @@ spring:
 - [Producer 모듈 README](producer/README.md)
 - [Consumer 모듈 README](consumer/README.md)
 
-## 주의사항
+## Docker Compose
+
+### Docker Compose란?
+Docker Compose는 다중 컨테이너 Docker 애플리케이션을 정의하고 실행하기 위한 도구입니다. YAML 파일을 사용하여 애플리케이션의 서비스를 구성하고, 단일 명령으로 모든 서비스를 생성하고 시작할 수 있습니다.
+
+### Docker Compose 설치
+Docker Compose를 사용하기 위해서는 Docker가 먼저 설치되어 있어야 합니다.
+- Docker Desktop을 설치하면 Docker Compose가 함께 설치됩니다.
+- Linux에서는 별도로 Docker Compose를 설치해야 할 수 있습니다.
+
+### Docker Compose 실행 방법
+프로젝트 루트 디렉토리에서 다음 명령어를 실행하여 Kafka 서버를 시작할 수 있습니다:
+
+```bash
+docker-compose up -d
+```
+
+서비스를 중지하려면 다음 명령어를 사용합니다:
+
+```bash
+docker-compose down
+```
+
+로그를 확인하려면:
+
+```bash
+docker-compose logs -f
+```
+
+### Kafka 설정 상세 정보
+이 프로젝트의 `docker-compose.yml` 파일은 다음과 같은 특징을 가진 Kafka 서버를 설정합니다:
+
+1. **KRaft 모드**: Zookeeper 없이 Kafka를 실행합니다.
+2. **Confluent Platform 7.4.1**: Kafka 3.4.1을 포함하는 Confluent Platform을 사용합니다.
+3. **포트 설정**:
+   - 9092: 내부 통신용 포트
+   - 29092: 외부 클라이언트 연결용 포트
+4. **데이터 영속성**: 볼륨을 사용하여 Kafka 데이터를 영속적으로 저장합니다.
+5. **헬스체크**: Kafka 서버가 정상적으로 시작되었는지 확인하기 위한 헬스체크가 구성되어 있습니다.
+
+### 특별한 설정
+1. **KRaft 모드 설정**:
+   - `KAFKA_PROCESS_ROLES`: broker와 controller 역할을 모두 수행
+   - `KAFKA_NODE_ID`: 노드 식별자
+   - `KAFKA_CONTROLLER_QUORUM_VOTERS`: 컨트롤러 쿼럼 구성
+   - `KAFKA_CONTROLLER_LISTENER_NAMES`: 컨트롤러 통신에 사용할 리스너 이름
+   - `CLUSTER_ID`: 클러스터 식별자
+
+2. **리스너 설정**:
+   - `KAFKA_LISTENERS`: 내부 및 외부 연결을 위한 리스너 설정
+   - `KAFKA_ADVERTISED_LISTENERS`: 클라이언트에게 알려질 리스너 주소
+
+3. **토픽 설정**:
+   - `KAFKA_AUTO_CREATE_TOPICS_ENABLE`: 토픽 자동 생성 활성화
+   - `KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR`: 오프셋 토픽 복제 팩터
+   - `KAFKA_TRANSACTION_STATE_LOG_MIN_ISR`: 트랜잭션 상태 로그 최소 ISR
+   - `KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR`: 트랜잭션 상태 로그 복제 팩터
+
+### 주의사항
+- Docker Compose를 사용하여 Kafka를 실행할 경우, 애플리케이션의 Kafka 연결 설정이 Docker 네트워크에 맞게 구성되어야 합니다.
+- 로컬 개발 환경에서는 `localhost:9092`로 연결할 수 있습니다.
+- 실제 운영 환경에서는 보안, 성능, 안정성을 고려한 추가 설정이 필요할 수 있습니다.
 - 애플리케이션을 실행하기 전에 Kafka 서버가 실행 중이어야 합니다.
 - 토픽이 존재하지 않는 경우 자동으로 생성되도록 설정할 수 있습니다.
-- 실제 운영 환경에서는 보안, 성능, 안정성을 고려한 추가 설정이 필요할 수 있습니다.
