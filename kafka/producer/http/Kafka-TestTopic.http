@@ -1,0 +1,7 @@
+### 메시지 발행 요청
+POST http://localhost:8070/api/kafka/publish
+Content-Type: application/json
+
+{
+  "message": "test-topic message 1"
+}
