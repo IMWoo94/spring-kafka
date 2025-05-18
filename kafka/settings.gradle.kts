@@ -1,2 +1,2 @@
 rootProject.name = "spring-kafka-multi-module"
-include("producer", "consumer")
+include("topic-configuration", "producer", "consumer")
