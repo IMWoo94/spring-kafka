@@ -3,5 +3,5 @@ POST http://localhost:8070/api/kafka/publish
 Content-Type: application/json
 
 {
-  "message": "test-topic message 1"
+  "message": "test-topic message 2"
 }
